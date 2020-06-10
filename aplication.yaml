@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: aplication
+  name: aplication
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      run: aplication
+  template:
+    metadata:
+      labels:
+        run: aplication
+    spec:
+      containers:
+      - name: aplication
+        image: tomcat:7
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+        volumes: 
+          - ./tomcat/server.xml:/usr/local/tomcat/conf/server.xml
+          - ./tomcat/ROOT:/usr/local/tomcat/webapps/ROOT
